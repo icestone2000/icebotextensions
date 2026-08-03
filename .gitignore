@@ -16,3 +16,6 @@ Thumbs.db
 # 临时文件
 ~$*
 *.log
+
+# Release 打包产物（作为 GitHub Release 附件发布，不进仓库）
+release/
