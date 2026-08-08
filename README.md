@@ -1,6 +1,6 @@
 # 冰石机器人扩展（IceBot Extensions）
 
-本仓库是**冰石机器人**（智能微信客服机器人系统）的官方开源扩展集合，包含 10 个真实业务场景的扩展源码，以及完整的扩展开发文档。你可以直接部署这些扩展，也可以把它们当作模板，为自己的业务开发新扩展。
+本仓库是**冰石机器人**（智能微信客服机器人系统）的官方开源扩展集合，包含 11 个真实业务场景的扩展源码，以及完整的扩展开发文档。你可以直接部署这些扩展，也可以把它们当作模板，为自己的业务开发新扩展。
 
 ---
 
@@ -60,7 +60,7 @@
 icebotextensions/
 ├── README.md
 ├── docs/                 # 扩展开发文档（中文）
-└── extensions/           # 10 个扩展源码，每个扩展一个目录
+└── extensions/           # 11 个扩展源码，每个扩展一个目录
 ```
 
 本仓库的 `extensions/` 目录对应冰石机器人的扩展根目录：
@@ -89,6 +89,7 @@ icebotextensions/
 | [etc_repair_ledger](extensions/etc_repair_ledger/) | A | `etc_repair_ledger_record` | ETC 收费站设备报修自动登记 Excel 台账 |
 | [king_honor_boost_price_calc](extensions/king_honor_boost_price_calc/) | A | `king_honor_boost_price_calc` | 王者荣耀代练报价（LLM 计算） |
 | [mobile_plan_recommender](extensions/mobile_plan_recommender/) | A | `mobile_plan_recommend` | 手机流量套餐智能推荐（LLM 排序） |
+| [send_qr_code](extensions/send_qr_code/) | A | `send_qr_code` | 从码库目录取二维码图片发给对方，发完即删 |
 | [chat_order_from_message](extensions/chat_order_from_message/) | B | `handleCommand()` | 从群消息一句话解析并自动创建订单 |
 | [logistics_price_quote](extensions/logistics_price_quote/) | B | `handleCommand()` | 物流装卸货自然语言报价（对接外部 AI 接口） |
 | [transfer_card_secret](extensions/transfer_card_secret/) | B | `handleCommand()` | 微信收款自动发卡密 |
@@ -133,6 +134,12 @@ icebotextensions/
 抓取运营商套餐页面并解析套餐列表，再用 LLM 按客户的自然语言条件（「联通 50 左右的」「移动流量多的」）挑选排序 top_k；**LLM 失败自动降级**为本地关键词匹配，保证工具永不空手而归。源数据日级缓存 + 查询结果 LRU 缓存。这是**纯查询、不发消息**类工具的推荐参考实现，结果 JSON 交由大模型组织自然语言回复。
 
 - 参数：`query`（必填）、`top_k`（默认 5）、`force_refresh`
+
+#### send_qr_code — 发送二维码图片
+
+从 `directory` 参数指定的二维码码库目录中取一张图片（可用 `file_name` 指定具体文件），通过当前会话渠道主动发送给对方（个人微信 / 企业微信 / 闲鱼），**发送成功后自动删除该图片文件**，保证一张码只发一次。适合收款码、进群码等「一码一发、发完即毁」场景。工具会主动发消息，建议设置 `requires_tool_result: false`。
+
+- 参数：`directory`（必填，码库目录）、`file_name`（可选，指定文件名）
 
 #### chat_order_from_message — 群消息自动建单
 
