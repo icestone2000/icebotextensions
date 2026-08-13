@@ -1,5 +1,7 @@
 # 冰石机器人扩展（IceBot Extensions）
 
+> 官网：**[https://www.icestonebot.com](https://www.icestonebot.com)** —— 产品介绍、功能演示、下载与购买
+
 本仓库是**冰石机器人**（智能微信客服机器人系统）的官方开源扩展集合，包含 11 个真实业务场景的扩展源码，以及完整的扩展开发文档。你可以直接部署这些扩展，也可以把它们当作模板，为自己的业务开发新扩展。
 
 ---
@@ -44,11 +46,14 @@
 
 完整功能清单见 [docs/功能列表.md](docs/功能列表.md)，特色功能详解见 [docs/特色功能.md](docs/特色功能.md)。
 
+更多产品信息、功能演示与下载，请访问官网 **[www.icestonebot.com](https://www.icestonebot.com)**。
+
 ---
 
 ## 二、免费试用
 
-扫描下方二维码，添加企业微信，**获取免费试用激活码**：
+- **官网**：[https://www.icestonebot.com](https://www.icestonebot.com) —— 了解完整功能、下载主程序
+- **企业微信**：扫描下方二维码添加，**获取免费试用激活码**
 
 ![扫码加企业微信获取免费试用激活码](docs/images/企业微信二维码.png)
 
@@ -234,4 +239,4 @@ def unregister(ctx):
 
 本仓库代码基于 [MIT License](LICENSE) 开源。
 
-冰石机器人主程序为商业软件，扫描上方二维码加企业微信可获取**免费试用激活码**。
+冰石机器人主程序为商业软件，详见官网 [www.icestonebot.com](https://www.icestonebot.com)，或扫描上方二维码加企业微信获取**免费试用激活码**。
