@@ -2,7 +2,7 @@
 
 > 官网：**[https://www.icestonebot.com](https://www.icestonebot.com)** —— 产品介绍、功能演示、下载与购买
 
-本仓库是**冰石机器人**（智能微信客服机器人系统）的官方开源扩展集合，包含 11 个真实业务场景的扩展源码，以及完整的扩展开发文档。你可以直接部署这些扩展，也可以把它们当作模板，为自己的业务开发新扩展。
+本仓库是**冰石机器人**（智能微信客服机器人系统）的官方开源扩展集合，包含 12 个真实业务场景的扩展源码，以及完整的扩展开发文档。你可以直接部署这些扩展，也可以把它们当作模板，为自己的业务开发新扩展。
 
 ---
 
@@ -65,7 +65,7 @@
 icebotextensions/
 ├── README.md
 ├── docs/                 # 扩展开发文档（中文）
-└── extensions/           # 11 个扩展源码，每个扩展一个目录
+└── extensions/           # 12 个扩展源码，每个扩展一个目录
 ```
 
 本仓库的 `extensions/` 目录对应冰石机器人的扩展根目录：
@@ -91,6 +91,7 @@ icebotextensions/
 | [hello_ext](extensions/hello_ext/) | A | `hello_tool` | 最小入门示例，学写扩展从这里开始 |
 | [weather_query](extensions/weather_query/) | A | `weather_query` | 查城市实时天气并发回当前会话 |
 | [express_price_calc](extensions/express_price_calc/) | A | `express_price_quote` | 读 Excel 价格表算快递运费并报价 |
+| [tire_price_query](extensions/tire_price_query/) | A | `tire_price_query` | 读 Excel 价格表按品牌/型号查轮胎报价并发送 |
 | [etc_repair_ledger](extensions/etc_repair_ledger/) | A | `etc_repair_ledger_record` | ETC 收费站设备报修自动登记 Excel 台账 |
 | [king_honor_boost_price_calc](extensions/king_honor_boost_price_calc/) | A | `king_honor_boost_price_calc` | 王者荣耀代练报价（LLM 计算） |
 | [mobile_plan_recommender](extensions/mobile_plan_recommender/) | A | `mobile_plan_recommend` | 手机流量套餐智能推荐（LLM 排序） |
@@ -119,6 +120,16 @@ icebotextensions/
 后台线程每 30 秒轮询价格表文件变更并自动刷新缓存——改了 Excel 无需重启。这是**带发消息的数据查询工具**的推荐参考实现（`tool.py` + `service.py` + `message_sender.py` 分层）。
 
 - 参数：`origin_province`、`dest_province`（必填）；`weight_kg`、`length_cm/width_cm/height_cm`、`compensation_base`、`courier_name`、`send_to_customer`、`message_template` 等
+
+#### tire_price_query — 轮胎报价查询
+
+轮胎店 / 汽服门店客服场景：客户问「马牌 205/55R16 多少钱」，工具从后端根目录的 `轮胎型号.xlsx`（列：品牌 / 规格 / 备注 / 若干报价类型列）按品牌 + 型号 + 报价类型取价，按模板排好版直接发回会话。
+
+**报价类型完全由表头决定**——除品牌 / 规格 / 备注外的列都是报价类型，业务加列、改名、删列都不用改代码；工具描述在运行时读一次真实表头，把当前可选的报价类型直接告诉大模型，避免它猜不存在的档位。报价类型允许只写一部分（「大客户」命中「大客户报价」，「客户」同时命中「大客户报价」「小客户报价」）；型号 / 品牌支持通配符 `*` `?`，匹配前统一去空格、全角转半角、转大写，不带通配符时先精确后「包含」。空价格显示「暂无报价」，文字价（「面议」）原样输出，重复行自动去重，超过 `max_rows`（默认 30）截断并注明总条数。同样带 30 秒 mtime 轮询，改完 Excel 无需重启。
+
+扩展目录附带**空白价格表模板** `轮胎型号.xlsx`（446 行常见品牌规格）与**测试用表** `轮胎型号_测试.xlsx`。完整使用说明见 [docs/轮胎报价查询工具使用说明.md](docs/轮胎报价查询工具使用说明.md)。
+
+- 参数：`model`（必填，型号/规格）；`brand`、`quote_type`、`format_template`、`max_rows`、`price_table_filename`、`send_to_customer`、`recipient_id`
 
 #### etc_repair_ledger — ETC 设备报修台账
 
@@ -183,6 +194,7 @@ icebotextensions/
 | [extensions.md](docs/extensions.md) | 扩展加载机制：目录位置、启动预加载、动态重载 API |
 | [机器人大模型与工具配置说明.md](docs/机器人大模型与工具配置说明.md) | 管理后台配置：大模型接入、提示词模板、启用工具调用、内置工具参数（含配置截图） |
 | [关键词回复-执行Python代码.md](docs/关键词回复-执行Python代码.md) | B 类扩展的触发方式：在关键词回复中执行 Python 代码调用扩展 |
+| [轮胎报价查询工具使用说明.md](docs/轮胎报价查询工具使用说明.md) | 单个扩展的**完整落地示例**：`tire_price_query` 从准备 Excel 价格表、后台启用工具、写提示词到场景演练与排错，可作为「Excel 数据 → 大模型工具 → 自动回复」这类需求的实施范本 |
 
 ### 最小扩展长这样
 
